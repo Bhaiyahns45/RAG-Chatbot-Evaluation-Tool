@@ -25,7 +25,3 @@ Start by uploading an Excel file. The file should contain relevant columns such 
 
 ---
 
-## GitHub Repository
-
-For more details, to report issues, or to contribute to the project, visit our [GitHub repository](YOUR_REPO_URL_HERE).
-
