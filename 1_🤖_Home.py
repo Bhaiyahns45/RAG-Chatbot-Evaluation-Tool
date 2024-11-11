@@ -104,7 +104,7 @@ if st.session_state['uploaded_file'] is not None:
     if col1.button("Prev") and st.session_state.current_row > 0:
         st.session_state.current_row -= 1
         st.rerun()  # Rerun the app to display the new row
-    if col2.button("Next") and st.session_state.current_row < len(df) - 1:
+    if col2.button("Next", disabled=(st.session_state.current_row == len(df) - 1)) and st.session_state.current_row < len(df) - 1:
         st.session_state.current_row += 1
         st.rerun()  # Rerun the app to display the new row
 
