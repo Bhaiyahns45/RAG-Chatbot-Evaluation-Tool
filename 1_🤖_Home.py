@@ -64,6 +64,7 @@ if st.session_state['uploaded_file'] is not None:
             f"Missing required columns: {', '.join(missing_columns)}. "
             f"Please recheck your file and ensure it contains both **question and answer** columns."
         )
+            st.session_state['uploaded_file'] = None
 
         else:
 
