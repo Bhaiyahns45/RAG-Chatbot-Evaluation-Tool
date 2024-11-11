@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+from io import BytesIO
 
 # Set up the Streamlit page configuration
 st.set_page_config(
@@ -115,12 +116,29 @@ if st.session_state['uploaded_file'] is not None:
             if col not in ['question', 'answer', 'Score']:
                 st.write(f"**{col.capitalize()}**: {current_data.get(col, 'N/A')}")
 
-    # Export scored data to a new Excel file
-    if st.sidebar.button("Export Scored Data"):
-        # Update DataFrame with scores from session state
-        df['Score'] = st.session_state.scores
-        df.to_excel("Scored_Data.xlsx", index=False)
-        st.sidebar.success("Excel file exported with scores!")
+
+    # Initialize session state for scores if it doesn't exist
+    if 'scores' not in st.session_state:
+        st.session_state.scores = [None] * len(df)  # Initialize with None for each question
+
+
+    # Update DataFrame with scores from session state
+    df['Score'] = st.session_state.scores
+    
+    # Save to a BytesIO stream to avoid writing to disk
+    output = BytesIO()
+    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+        df.to_excel(writer, index=False, sheet_name='Scores')
+    output.seek(0)  # Move pointer to the start for reading
+
+    # Provide download button
+    if st.sidebar.download_button(
+        label="Download Scored Data",
+        data=output,
+        file_name="Scored_Data.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ):
+        st.sidebar.success("Scored Data download!")
 
     # Button for starting a new file upload
     if st.sidebar.button("New Upload"):
